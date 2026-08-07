@@ -3,8 +3,18 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv('data/aism_ds_pg.csv')
 
+print(df.head)
+print()
 
-df.head()
+print(df.describe())
+print()
 
-df.info()
+print(df.info())
+print()
 
+print("Missing values in each column:")
+print(df.isnull().sum())
+print()
+
+print(f"Duplicate rows: {df.duplicated().sum()}")
+print()
