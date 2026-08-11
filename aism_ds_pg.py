@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import pearsonr
+from scipy.stats import pearsonr, linregress
 
 # Functions
 
@@ -67,6 +67,12 @@ def cohens_d(high_group, low_group):
     cohens_d_value = (mean_mental_health_high - mean_mental_health_low) / pooled_std
     return cohens_d_value
 
+
+def linear_regression(df, x_col, y_col):
+    result = linregress(df[x_col], df[y_col])
+    return result
+
+
 # Load the dataset
 
 df = pd.read_csv('data/aism_ds_pg.csv')
@@ -98,6 +104,8 @@ mean_mental_health_high, mean_mental_health_low = calculate_mean_mental_health(h
 std_high, std_low = calculate_mental_health_std(high_users, low_users)
 
 cohens_d_value = cohens_d(high_users, low_users)
+
+linear_regression_result = linear_regression(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score')
 
 
 #Results
@@ -137,3 +145,13 @@ print(f"Low social media SD: {std_low:.3f}")
 
 # Cohen's d
 print(f"Cohen's d: {cohens_d_value:.3f}")
+
+# Linear Regression
+print(
+    f"Linear Regression Result: slope={linear_regression_result.slope:.3f}", 
+    f"intercept={linear_regression_result.intercept:.3f}", 
+    f"rvalue={linear_regression_result.rvalue:.3f}", 
+    f"pvalue={linear_regression_result.pvalue:.3e}", 
+    f"stderr={linear_regression_result.stderr:.3f}",
+    f"intercept_stderr={linear_regression_result.intercept_stderr:.3f}"
+)
