@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import pearsonr, linregress
+import statsmodels.api as sm
 
 # Functions
 
@@ -72,6 +73,14 @@ def linear_regression(df, x_col, y_col):
     result = linregress(df[x_col], df[y_col])
     return result
 
+def multiple_linear_regression(df, x_cols, y_col):
+    X = df[x_cols]
+    y = df[y_col]
+    X = sm.add_constant(X)
+    model = sm.OLS(y, X)
+    results = model.fit()
+    return results
+
 
 # Load the dataset
 
@@ -106,6 +115,8 @@ std_high, std_low = calculate_mental_health_std(high_users, low_users)
 cohens_d_value = cohens_d(high_users, low_users)
 
 linear_regression_result = linear_regression(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score')
+
+multiple_linear_regression_result = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
 
 
 #Results
@@ -155,3 +166,7 @@ print(
     f"stderr={linear_regression_result.stderr:.3f}",
     f"intercept_stderr={linear_regression_result.intercept_stderr:.3f}"
 )
+
+# Multiple Linear Regression
+print("Multiple Linear Regression Result:")
+print(multiple_linear_regression_result.summary())
