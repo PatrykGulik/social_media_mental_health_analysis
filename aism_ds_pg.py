@@ -202,7 +202,7 @@ if show_plots:
     scatter_plot(df, 'Physical_Activity_Hours', 'Mental_Health_Score', 'Relationship between Physical Activity and Mental Health', 'Physical Activity Hours', 'Mental Health Score')
 
 
-show_residual_plots = True
+show_residual_plots = False
 if show_residual_plots:
     plt.scatter(multiple_linear_regression_predictions, multiple_linear_regression_residuals, s=5)
     plt.axhline(y=0, color='black', linestyle='--')
@@ -212,3 +212,13 @@ if show_residual_plots:
     plt.title('Residuals vs Predicted Mental Health Score')
 
     plt.show()
+
+show_qq_plot = True
+if show_qq_plot:
+    sm.qqplot(multiple_linear_regression_residuals, line='s')
+    plt.title('Q-Q Plot of Residuals')
+    plt.show()
+
+show_residual_histogram = True
+if show_residual_histogram:
+    plot_histogram(pd.DataFrame(multiple_linear_regression_residuals, columns=['Residuals']), 'Residuals', 'Distribution of Residuals', 'Residuals', 'Frequency')
