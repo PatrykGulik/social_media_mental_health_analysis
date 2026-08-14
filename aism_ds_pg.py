@@ -89,27 +89,12 @@ def multiple_linear_regression(df, x_cols, y_col):
     results = model.fit()
     predictions = results.predict(X)
     residuals = y - predictions
-    return results, residuals
+    return results, predictions, residuals
 
 
 # Load the dataset
 
 df = pd.read_csv('data/aism_ds_pg.csv')
-
-
-# Data Visualization
-show_histograms = False
-if show_histograms:
-    plot_histogram(df, 'Mental_Health_Score', 'Distribution of Mental Health Scores', 'Mental Health Score', 'Frequency')
-    plot_histogram(df, 'Daily_Social_Media_Hours', 'Distribution of Daily Social Media Hours', 'Daily Social Media Hours', 'Frequency')
-
-
-show_plots = False
-if show_plots:
-    scatter_plot(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score', 'Relationship between Mental Health and Social Media Usage', 'Daily Social Media Hours', 'Mental Health Score')
-    scatter_plot(df, 'Sleep_Hours', 'Mental_Health_Score', 'Relationship between Sleep and Mental Health', 'Daily Sleep Hours', 'Mental Health Score')
-    scatter_plot(df, 'Social_Isolation_Score', 'Mental_Health_Score', 'Relationship between Social Isolation and Mental Health', 'Social Isolation Score', 'Mental Health Score')
-    scatter_plot(df, 'Physical_Activity_Hours', 'Mental_Health_Score', 'Relationship between Physical Activity and Mental Health', 'Physical Activity Hours', 'Mental Health Score')
 
 
 # Analysis 
@@ -132,7 +117,7 @@ cohens_d_value = cohens_d(high_users, low_users)
 
 linear_regression_result = linear_regression(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score')
 
-multiple_linear_regression_result, multiple_linear_regression_residuals = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
+multiple_linear_regression_result, multiple_linear_regression_predictions, multiple_linear_regression_residuals = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
 
 
 #Results
@@ -190,3 +175,30 @@ print(multiple_linear_regression_result.summary())
 # Multiple Linear Regression Residuals
 print("Multiple Linear Regression Residuals:")
 print(multiple_linear_regression_residuals.head())
+
+
+# Data Visualization
+show_histograms = False
+if show_histograms:
+    plot_histogram(df, 'Mental_Health_Score', 'Distribution of Mental Health Scores', 'Mental Health Score', 'Frequency')
+    plot_histogram(df, 'Daily_Social_Media_Hours', 'Distribution of Daily Social Media Hours', 'Daily Social Media Hours', 'Frequency')
+
+
+show_plots = False
+if show_plots:
+    scatter_plot(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score', 'Relationship between Mental Health and Social Media Usage', 'Daily Social Media Hours', 'Mental Health Score')
+    scatter_plot(df, 'Sleep_Hours', 'Mental_Health_Score', 'Relationship between Sleep and Mental Health', 'Daily Sleep Hours', 'Mental Health Score')
+    scatter_plot(df, 'Social_Isolation_Score', 'Mental_Health_Score', 'Relationship between Social Isolation and Mental Health', 'Social Isolation Score', 'Mental Health Score')
+    scatter_plot(df, 'Physical_Activity_Hours', 'Mental_Health_Score', 'Relationship between Physical Activity and Mental Health', 'Physical Activity Hours', 'Mental Health Score')
+
+
+show_residual_plots = True
+if show_residual_plots:
+    plt.scatter(multiple_linear_regression_predictions, multiple_linear_regression_residuals, s=5)
+    plt.axhline(y=0, color='black', linestyle='--')
+
+    plt.xlabel('Predicted Mental Health Score')
+    plt.ylabel('Residuals')
+    plt.title('Residuals vs Predicted Mental Health Score')
+
+    plt.show()
