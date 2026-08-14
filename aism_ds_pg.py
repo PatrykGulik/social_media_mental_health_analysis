@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import pearsonr, linregress
 import statsmodels.api as sm
+import statsmodels.stats.api as sms
 
 # Functions
 
@@ -87,9 +88,13 @@ def multiple_linear_regression(df, x_cols, y_col):
     X = sm.add_constant(X)
     model = sm.OLS(y, X)
     results = model.fit()
+
     predictions = results.predict(X)
     residuals = y - predictions
-    return results, predictions, residuals
+
+    breusch_pagan_test = sms.het_breuschpagan(residuals, X)
+
+    return results, predictions, residuals, breusch_pagan_test
 
 
 # Load the dataset
@@ -117,7 +122,7 @@ cohens_d_value = cohens_d(high_users, low_users)
 
 linear_regression_result = linear_regression(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score')
 
-multiple_linear_regression_result, multiple_linear_regression_predictions, multiple_linear_regression_residuals = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
+multiple_linear_regression_result, multiple_linear_regression_predictions, multiple_linear_regression_residuals, breusch_pagan_test = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
 
 
 #Results
@@ -175,6 +180,11 @@ print(multiple_linear_regression_result.summary())
 # Multiple Linear Regression Residuals
 print("Multiple Linear Regression Residuals:")
 print(multiple_linear_regression_residuals.head())
+
+# Breusch-Pagan Test
+print("Breusch-Pagan Test Result:")
+print(f"LM Statistic: {breusch_pagan_test[0]:.3f}")
+print(f"LM p-value: {breusch_pagan_test[1]:.3f}")   
 
 
 # Data Visualization
