@@ -21,6 +21,14 @@ def explore_categorical_columns(df):
     return categorical_columns, gender_counts, education_count, burnout_count
 
 
+def plot_histogram(df, column, title, xlabel, ylabel):
+    plt.hist(df[column], bins=20, edgecolor='black')
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.show()
+
+
 def scatter_plot(df, x_col, y_col, title, xlabel, ylabel):
     plt.scatter(x=df[x_col], y=df[y_col], s=5)
     plt.title(title)
@@ -79,7 +87,9 @@ def multiple_linear_regression(df, x_cols, y_col):
     X = sm.add_constant(X)
     model = sm.OLS(y, X)
     results = model.fit()
-    return results
+    predictions = results.predict(X)
+    residuals = y - predictions
+    return results, residuals
 
 
 # Load the dataset
@@ -88,6 +98,12 @@ df = pd.read_csv('data/aism_ds_pg.csv')
 
 
 # Data Visualization
+show_histograms = False
+if show_histograms:
+    plot_histogram(df, 'Mental_Health_Score', 'Distribution of Mental Health Scores', 'Mental Health Score', 'Frequency')
+    plot_histogram(df, 'Daily_Social_Media_Hours', 'Distribution of Daily Social Media Hours', 'Daily Social Media Hours', 'Frequency')
+
+
 show_plots = False
 if show_plots:
     scatter_plot(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score', 'Relationship between Mental Health and Social Media Usage', 'Daily Social Media Hours', 'Mental Health Score')
@@ -116,7 +132,7 @@ cohens_d_value = cohens_d(high_users, low_users)
 
 linear_regression_result = linear_regression(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score')
 
-multiple_linear_regression_result = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
+multiple_linear_regression_result, multiple_linear_regression_residuals = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
 
 
 #Results
@@ -170,3 +186,7 @@ print(
 # Multiple Linear Regression
 print("Multiple Linear Regression Result:")
 print(multiple_linear_regression_result.summary())
+
+# Multiple Linear Regression Residuals
+print("Multiple Linear Regression Residuals:")
+print(multiple_linear_regression_residuals.head())
