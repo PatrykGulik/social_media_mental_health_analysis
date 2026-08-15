@@ -94,7 +94,9 @@ def multiple_linear_regression(df, x_cols, y_col):
 
     breusch_pagan_test = sms.het_breuschpagan(residuals, X)
 
-    return results, predictions, residuals, breusch_pagan_test
+    robust_model = results.get_robustcov_results(cov_type='HC3')
+
+    return results, predictions, residuals, breusch_pagan_test, robust_model
 
 
 # Load the dataset
@@ -122,7 +124,7 @@ cohens_d_value = cohens_d(high_users, low_users)
 
 linear_regression_result = linear_regression(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score')
 
-multiple_linear_regression_result, multiple_linear_regression_predictions, multiple_linear_regression_residuals, breusch_pagan_test = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
+multiple_linear_regression_result, multiple_linear_regression_predictions, multiple_linear_regression_residuals, breusch_pagan_test, robust_model = multiple_linear_regression(df, ['Daily_Social_Media_Hours', 'Sleep_Hours', 'Social_Isolation_Score', 'Physical_Activity_Hours'], 'Mental_Health_Score')
 
 
 #Results
@@ -186,6 +188,9 @@ print("Breusch-Pagan Test Result:")
 print(f"LM Statistic: {breusch_pagan_test[0]:.3f}")
 print(f"LM p-value: {breusch_pagan_test[1]:.3f}")   
 
+# Robust Model Summary
+print("Robust Model Summary:")
+print(robust_model.summary())
 
 # Data Visualization
 show_histograms = False
@@ -213,12 +218,12 @@ if show_residual_plots:
 
     plt.show()
 
-show_qq_plot = True
+show_qq_plot = False
 if show_qq_plot:
     sm.qqplot(multiple_linear_regression_residuals, line='s')
     plt.title('Q-Q Plot of Residuals')
     plt.show()
 
-show_residual_histogram = True
+show_residual_histogram = False
 if show_residual_histogram:
     plot_histogram(pd.DataFrame(multiple_linear_regression_residuals, columns=['Residuals']), 'Residuals', 'Distribution of Residuals', 'Residuals', 'Frequency')
