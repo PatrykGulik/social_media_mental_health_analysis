@@ -101,7 +101,7 @@ def multiple_linear_regression(df, x_cols, y_col):
 
 # Load the dataset
 
-df = pd.read_csv('data/aism_ds_pg.csv')
+df = pd.read_csv('data/AI_SocialMedia_Student_Health_Dataset_clean.csv')
 
 
 # Analysis 
@@ -193,13 +193,13 @@ print("Robust Model Summary:")
 print(robust_model.summary())
 
 # Data Visualization
-show_histograms = False
+show_histograms = True
 if show_histograms:
     plot_histogram(df, 'Mental_Health_Score', 'Distribution of Mental Health Scores', 'Mental Health Score', 'Frequency')
     plot_histogram(df, 'Daily_Social_Media_Hours', 'Distribution of Daily Social Media Hours', 'Daily Social Media Hours', 'Frequency')
 
 
-show_plots = False
+show_plots = True
 if show_plots:
     scatter_plot(df, 'Daily_Social_Media_Hours', 'Mental_Health_Score', 'Relationship between Mental Health and Social Media Usage', 'Daily Social Media Hours', 'Mental Health Score')
     scatter_plot(df, 'Sleep_Hours', 'Mental_Health_Score', 'Relationship between Sleep and Mental Health', 'Daily Sleep Hours', 'Mental Health Score')
@@ -207,7 +207,7 @@ if show_plots:
     scatter_plot(df, 'Physical_Activity_Hours', 'Mental_Health_Score', 'Relationship between Physical Activity and Mental Health', 'Physical Activity Hours', 'Mental Health Score')
 
 
-show_residual_plots = False
+show_residual_plots = True
 if show_residual_plots:
     plt.scatter(multiple_linear_regression_predictions, multiple_linear_regression_residuals, s=5)
     plt.axhline(y=0, color='black', linestyle='--')
@@ -218,12 +218,12 @@ if show_residual_plots:
 
     plt.show()
 
-show_qq_plot = False
+show_qq_plot = True
 if show_qq_plot:
     sm.qqplot(multiple_linear_regression_residuals, line='s')
     plt.title('Q-Q Plot of Residuals')
     plt.show()
 
-show_residual_histogram = False
+show_residual_histogram = True
 if show_residual_histogram:
     plot_histogram(pd.DataFrame(multiple_linear_regression_residuals, columns=['Residuals']), 'Residuals', 'Distribution of Residuals', 'Residuals', 'Frequency')
