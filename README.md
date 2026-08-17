@@ -228,8 +228,8 @@ Social-Media-Mental-Health/
 Clone the repository:
 
 ```bash
-git clone https://github.com/PatrykGulik/aism_ds_pg.git
-cd aism_ds_pg
+git clone https://github.com/PatrykGulik/social_media_mental_health_analysis.git
+cd social_media_mental_health_analysis
 ```
 
 Install the required Python packages:
